@@ -5,7 +5,7 @@ import ExamsContext from '../ExamsContext';
 
 
 const UpcomingExams = ({ classes }) => {
-  const {exams} = useContext(ExamsContext);
+  const { exams } = useContext(ExamsContext);
   return (
     <div>
       <Box margin="20px 0">
@@ -13,11 +13,20 @@ const UpcomingExams = ({ classes }) => {
       </Box>
       <Paper>
         <List>
-          {exams.map(exam => (
+          {exams.slice().sort((a, b) => a.date - b.date).map(exam => (
             <ListItem key={exam.id} className={classes.listItem}>
-              <Box display="flex">
+              <Box display="flex" width="100%">
                 <div className={classes.child} style={{ background: exam.subject.color }} />
                 <span>{exam.title}</span>
+                <Box flex="1" />
+                <span>{exam.date.calendar(null, {
+                  sameDay: '[Today]',
+                  nextDay: '[Tomorrow]',
+                  nextWeek: 'dddd MMM DD',
+                  lastDay: '[Yesterday]',
+                  lastWeek: '[Last] dddd',
+                  sameElse: 'DD/MM/YYYY'
+                })}</span>
               </Box>
             </ListItem>))}
         </List>
@@ -32,6 +41,9 @@ const styles = {
     background: 'orange',
     margin: '0 10px 0 0',
     borderRadius: '4px'
+  },
+  spacer: {
+    flex: 1,
   }
 }
 
