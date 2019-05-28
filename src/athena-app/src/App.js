@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CssBaseline, Toolbar, AppBar, Typography, Button, Box, createMuiTheme, IconButton, Divider, ListItem, ListItemText, ListItemIcon, Drawer, List, } from '@material-ui/core';
 import Home from './components/Home';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import CreateExam from './components/CreateExamDialog';
 import CreateExamDialog from './components/CreateExamDialog';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import ExamsContext from './ExamsContext';
 import moment from 'moment';
 import { blue } from '@material-ui/core/colors';
-import { MuiThemeProvider, makeStyles, useTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider, makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -23,9 +22,9 @@ const routes = [
 
 const theme = createMuiTheme({
   palette: {
-    "primary": blue,
+    primary: blue,
   }
-})
+});
 
 const drawerWidth = 240;
 
@@ -95,7 +94,6 @@ let id = 4;
 
 const App = () => {
   const classes = useStyles();
-  const theme = useTheme();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -121,6 +119,10 @@ const App = () => {
     addExam({ ...exam, id: id++ });
     setDialogOpen(false);
   }
+
+  useEffect(() => {
+    fetch('https://localhost:5001/api/exams').then(res => res.json()).then(data => setExams(data.map(exam => ({...exam, date: moment(exam.date) })))).catch(e => console.log("ERRROORORORO", e));
+  }, [])
 
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
@@ -207,33 +209,6 @@ const App = () => {
       </ExamsContext.Provider>
     </MuiPickersUtilsProvider>
   )
-
-  // return (
-  //   <MuiPickersUtilsProvider utils={MomentUtils}>
-  //     <ExamsContext.Provider value={{ exams, addExam, removeExamById, subjects, addSubject }}>
-  //       <MuiThemeProvider theme={theme}>
-  //         <CssBaseline />
-  //         <Router>
-  //           <AppBar position="sticky">
-  //             <Toolbar>
-  //               <Typography variant="h6">Athena</Typography>
-  //               <Box flex="1" />
-  //               <Button onClick={() => setDialogOpen(true)} color="inherit">New Exam</Button>
-  //             </Toolbar>
-  //           </AppBar>
-  //           <Box padding="0 20px">
-  //             <Switch>
-  //               {routes.map(route => (
-  //                 <Route key={route.path} {...route} />
-  //               ))}
-  //             </Switch>
-  //           </Box>
-  //         </Router>
-  //         <CreateExamDialog open={dialogOpen} onClose={() => setDialogOpen(false)} onSubmit={handleSave} onCancel={() => setDialogOpen(false)} />
-  //       </MuiThemeProvider>
-  //     </ExamsContext.Provider>
-  //   </MuiPickersUtilsProvider>
-  // );
 }
 
 

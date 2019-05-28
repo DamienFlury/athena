@@ -47,6 +47,8 @@ namespace AthenaServer
                 app.UseHsts();
             }
 
+            app.UseCors(options => options.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+
             app.UseHttpsRedirection();
             app.UseMvc();
         }
