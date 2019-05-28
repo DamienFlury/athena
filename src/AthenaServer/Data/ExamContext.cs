@@ -19,26 +19,6 @@ namespace AthenaServer.Data {
             Color = "#44ff88",
         }
       });
-      modelBuilder.Entity<Exam> ().HasData (new Exam[] {
-        new Exam {
-          Id = 1,
-            Title = "Analysis",
-            Date = DateTime.Today,
-            SubjectId = 1
-        },
-        new Exam {
-          Id = 2,
-          Title = "Grammaire",
-          SubjectId = 2,
-          Date = DateTime.Today.AddDays(2)
-        },
-        new Exam {
-          Id = 3,
-          Title = "Stochastik",
-          Date = DateTime.Today.AddMonths(2),
-          SubjectId = 1,
-        }
-      });
     }
     public DbSet<Exam> Exams { get; set; }
     public DbSet<Subject> Subjects { get; set; }

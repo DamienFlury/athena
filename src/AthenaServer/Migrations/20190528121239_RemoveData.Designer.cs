@@ -3,15 +3,17 @@ using System;
 using AthenaServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace AthenaServer.Migrations
 {
     [DbContext(typeof(ExamContext))]
-    partial class ExamContextModelSnapshot : ModelSnapshot
+    [Migration("20190528121239_RemoveData")]
+    partial class RemoveData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,20 +53,6 @@ namespace AthenaServer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Subjects");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Color = "#ff3377",
-                            Title = "Mathematics"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Color = "#44ff88",
-                            Title = "French"
-                        });
                 });
 
             modelBuilder.Entity("AthenaServer.Data.Entities.Exam", b =>

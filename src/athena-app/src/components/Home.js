@@ -9,7 +9,4 @@ const Home = ({classes}) => (
   </div>
 );
 
-const styles = {
-}
-
-export default withStyles(styles)(Home);
+export default Home;
