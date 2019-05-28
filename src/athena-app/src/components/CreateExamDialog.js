@@ -13,7 +13,7 @@ const CreateExamDialog = (props) => {
 
   const [title, setTitle] = useState('');
   const { subjects } = useContext(ExamsContext);
-  const [subject, setSubject] = useState(subjects[0]);
+  const [subjectId, setSubjectId] = useState(1);
   const [date, setDate] = useState(new Date());
 
   return (
@@ -35,10 +35,10 @@ const CreateExamDialog = (props) => {
           <InputLabel htmlFor="subject">Subject</InputLabel>
           <Select
             inputProps={{ id: 'subject' }}
-            value={subject}
-            onChange={e => setSubject(e.target.value)}
+            value={subjectId}
+            onChange={e => setSubjectId(e.target.value)}
           >
-            {subjects.map(subj => <MenuItem key={subj.id} value={subj}>{subj.title}</MenuItem>)}
+            {subjects.map(subj => <MenuItem key={subj.id} value={subj.id}>{subj.title}</MenuItem>)}
           </Select>
         </FormControl>
         <DatePicker
@@ -55,13 +55,13 @@ const CreateExamDialog = (props) => {
           props.onCancel();
           setTitle('');
           setDate(moment());
-          setSubject(subjects[0])
+          setSubjectId(1)
         }}>Cancel</Button>
         <Button onClick={() => {
-          props.onSubmit({title, date, subject});
+          props.onSubmit({title, date, subjectId});
           setTitle('');
           setDate(moment());
-          setSubject(subjects[0]);
+          setSubjectId(1);
         }}>Save</Button>
       </DialogActions>
     </Dialog>

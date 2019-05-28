@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace AthenaServer
 {
@@ -31,6 +32,10 @@ namespace AthenaServer
                 .AddDbContext<ExamContext>(options => options.UseNpgsql(Configuration.GetConnectionString("postgres")))
                 .BuildServiceProvider();
 
+            services.AddSwaggerGen(c => {
+                c.SwaggerDoc("v1", new Info { Title = "Exams Api", Version = "v1"});
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -46,6 +51,11 @@ namespace AthenaServer
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseSwagger();
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Api v1");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseCors(options => options.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
 

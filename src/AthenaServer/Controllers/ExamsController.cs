@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AthenaServer.Data;
 using AthenaServer.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -13,5 +14,17 @@ namespace AthenaServer.Controllers {
 
     [HttpGet]
     public IEnumerable<Exam> GetAll () => _context.Exams.Include (exam => exam.Subject);
+
+    [HttpPost]
+    public async Task<IActionResult> Add(Exam exam) {
+      if(!ModelState.IsValid) return BadRequest();
+      _context.Exams.Add(exam);
+      await _context.SaveChangesAsync();
+      exam.Subject = await _context.Subjects.SingleOrDefaultAsync(subj => subj.Id == exam.SubjectId);
+      if(exam.Subject is null) {
+        return BadRequest();
+      }
+      return Ok(exam);
+    }
   }
 }

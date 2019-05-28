@@ -15,6 +15,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import InboxIcon from '@material-ui/icons/Inbox';
 import MailIcon from '@material-ui/icons/Mail'
+import Axios from 'axios';
 
 const routes = [
   { path: '/', title: 'Home', component: Home, exact: true },
@@ -89,8 +90,6 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-let id = 4;
-
 
 const App = () => {
   const classes = useStyles();
@@ -116,12 +115,15 @@ const App = () => {
   const addSubject = newSubject => setSubjects(prev => prev.concat(newSubject));
 
   const handleSave = (exam) => {
-    addExam({ ...exam, id: id++ });
+    Axios.post('https://localhost:5001/api/exams', exam)
+      .then(res => {
+        addExam({...res.data, date: moment(res.data.date)});
+      })
     setDialogOpen(false);
   }
 
   useEffect(() => {
-    fetch('https://localhost:5001/api/exams').then(res => res.json()).then(data => setExams(data.map(exam => ({...exam, date: moment(exam.date) })))).catch(e => console.log("ERRROORORORO", e));
+    fetch('https://localhost:5001/api/exams').then(res => res.json()).then(data => setExams(data.map(exam => ({ ...exam, date: moment(exam.date) })))).catch(e => console.log("ERRROORORORO", e));
   }, [])
 
   return (
