@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { CssBaseline, Toolbar, AppBar, Typography, Button, Box, createMuiTheme, IconButton, Divider, ListItem, ListItemText, ListItemIcon, Drawer, List, } from '@material-ui/core';
-import Home from './components/Home';
+import {
+  CssBaseline,
+  Toolbar,
+  AppBar,
+  Typography,
+  Button,
+  Box,
+  createMuiTheme,
+  IconButton,
+  Divider, ListItem,
+  ListItemText,
+  ListItemIcon,
+  Drawer,
+  List,
+} from '@material-ui/core';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import CreateExamDialog from './components/CreateExamDialog';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
-import ExamsContext from './ExamsContext';
 import moment from 'moment';
 import { blue } from '@material-ui/core/colors';
 import { MuiThemeProvider, makeStyles } from '@material-ui/core/styles';
@@ -14,22 +25,27 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import InboxIcon from '@material-ui/icons/Inbox';
-import MailIcon from '@material-ui/icons/Mail'
+import MailIcon from '@material-ui/icons/Mail';
 import Axios from 'axios';
+import ExamsContext from './ExamsContext';
+import CreateExamDialog from './components/CreateExamDialog';
+import Home from './components/Home';
 
 const routes = [
-  { path: '/', title: 'Home', component: Home, exact: true },
-]
+  {
+    path: '/', title: 'Home', component: Home, exact: true,
+  },
+];
 
 const theme = createMuiTheme({
   palette: {
     primary: blue,
-  }
+  },
 });
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
   },
@@ -98,15 +114,21 @@ const App = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const [exams, setExams] = useState([
-    { id: 1, title: "Grammaire", subject: { title: 'french', color: '#88ff22' }, date: moment() },
-    { id: 2, title: "Polynomial equations", subject: { title: 'mathematics', color: '#ff3322' }, date: moment() },
-    { id: 3, title: "Grammar", subject: { title: 'english', color: '#8833ff' }, date: moment() },
+    {
+      id: 1, title: 'Grammaire', subject: { title: 'french', color: '#88ff22' }, date: moment(),
+    },
+    {
+      id: 2, title: 'Polynomial equations', subject: { title: 'mathematics', color: '#ff3322' }, date: moment(),
+    },
+    {
+      id: 3, title: 'Grammar', subject: { title: 'english', color: '#8833ff' }, date: moment(),
+    },
   ]);
 
   const [subjects, setSubjects] = useState([
     { id: 1, title: 'mathematics', color: '#ff3322' },
     { id: 2, title: 'french', color: '#88ff22' },
-    { id: 3, title: 'english', color: '#8833ff' }
+    { id: 3, title: 'english', color: '#8833ff' },
   ]);
 
   const addExam = newExam => setExams(prev => prev.concat(newExam));
@@ -116,19 +138,22 @@ const App = () => {
 
   const handleSave = (exam) => {
     Axios.post('https://localhost:5001/api/exams', exam)
-      .then(res => {
-        addExam({...res.data, date: moment(res.data.date)});
-      })
+      .then((res) => {
+        addExam({ ...res.data, date: moment(res.data.date) });
+      });
     setDialogOpen(false);
-  }
+  };
 
   useEffect(() => {
-    fetch('https://localhost:5001/api/exams').then(res => res.json()).then(data => setExams(data.map(exam => ({ ...exam, date: moment(exam.date) })))).catch(e => console.log("ERRROORORORO", e));
-  }, [])
+    fetch('https://localhost:5001/api/exams').then(res => res.json()).then(data => setExams(data.map(exam => ({ ...exam, date: moment(exam.date) })))).catch(e => console.log('ERRROORORORO', e));
+  }, []);
 
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
-      <ExamsContext.Provider value={{ exams, addExam, removeExamById, subjects, addSubject }}>
+      <ExamsContext.Provider value={{
+        exams, addExam, removeExamById, subjects, addSubject,
+      }}
+      >
         <MuiThemeProvider theme={theme}>
           <Router>
             <div className={classes.root}>
@@ -204,14 +229,19 @@ const App = () => {
                   </Switch>
                 </Box>
               </main>
-              <CreateExamDialog open={dialogOpen} onClose={() => setDialogOpen(false)} onSubmit={handleSave} onCancel={() => setDialogOpen(false)} />
+              <CreateExamDialog
+                open={dialogOpen}
+                onClose={() => setDialogOpen(false)}
+                onSubmit={handleSave}
+                onCancel={() => setDialogOpen(false)}
+              />
             </div>
           </Router>
         </MuiThemeProvider>
       </ExamsContext.Provider>
     </MuiPickersUtilsProvider>
-  )
-}
+  );
+};
 
 
 export default App;

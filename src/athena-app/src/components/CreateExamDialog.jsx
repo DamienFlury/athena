@@ -1,16 +1,24 @@
 import React, { useState, useContext } from 'react';
-import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, Select, MenuItem, FormControl, InputLabel, Slide, useTheme } from '@material-ui/core';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions,
+  Button, Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Slide,
+} from '@material-ui/core';
 import { DatePicker } from '@material-ui/pickers';
-import ExamsContext from '../ExamsContext';
 import moment from 'moment';
+import ExamsContext from '../ExamsContext';
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
 
 const CreateExamDialog = (props) => {
-
   const [title, setTitle] = useState('');
   const { subjects } = useContext(ExamsContext);
   const [subjectId, setSubjectId] = useState(1);
@@ -55,18 +63,24 @@ const CreateExamDialog = (props) => {
           props.onCancel();
           setTitle('');
           setDate(moment());
-          setSubjectId(1)
-        }}>Cancel</Button>
+          setSubjectId(1);
+        }}
+        >
+Cancel
+        </Button>
         <Button onClick={() => {
-          props.onSubmit({title, date, subjectId});
+          props.onSubmit({ title, date, subjectId });
           setTitle('');
           setDate(moment());
           setSubjectId(1);
-        }}>Save</Button>
+        }}
+        >
+Save
+        </Button>
       </DialogActions>
     </Dialog>
   );
-}
+};
 
 
 export default CreateExamDialog;
