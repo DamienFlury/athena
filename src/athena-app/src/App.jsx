@@ -115,7 +115,7 @@ const App = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const { exams, addExam } = useExams();
-  const [subjects, dispatchSubjects] = useSubjects();
+  const { subjects } = useSubjects();
 
 
   const handleSave = (exam) => {
@@ -126,7 +126,7 @@ const App = () => {
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
       <ExamsContext.Provider value={{
-        exams, subjects, dispatchSubjects,
+        exams, subjects,
       }}
       >
         <MuiThemeProvider theme={theme}>

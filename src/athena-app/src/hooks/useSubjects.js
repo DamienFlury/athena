@@ -17,7 +17,7 @@ const useSubjects = () => {
       .then(res => dispatch({ type: 'REPLACE', subjects: res.data }));
   }, []);
 
-  return [subjects, dispatch];
+  return { subjects };
 };
 
 export default useSubjects;
