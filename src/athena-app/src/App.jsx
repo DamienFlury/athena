@@ -24,8 +24,9 @@ import clsx from 'clsx';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import InboxIcon from '@material-ui/icons/Inbox';
-import MailIcon from '@material-ui/icons/Mail';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import ClassIcon from '@material-ui/icons/Class';
+import SettingsIcon from '@material-ui/icons/Settings';
 import Axios from 'axios';
 import ExamsContext from './ExamsContext';
 import CreateExamDialog from './components/CreateExamDialog';
@@ -130,7 +131,7 @@ const App = () => {
     switch (action.type) {
       case 'ADD':
         return [...state, action.subject];
-      case 'replace':
+      case 'REPLACE':
         return action.subjects;
       default:
         return state;
@@ -149,7 +150,7 @@ const App = () => {
   useEffect(() => {
     Axios.get('https://localhost:5001/api/exams')
       .then(res => dispatchExams({ type: 'REPLACE', exams: res.data.map(exam => ({ ...exam, date: moment(exam.date) })) }));
-    Axios.get('https://localhost:5001/api/exams')
+    Axios.get('https://localhost:5001/api/subjects')
       .then(res => dispatchSubjects({ type: 'REPLACE', subjects: res.data }));
   }, []);
 
@@ -207,21 +208,19 @@ const App = () => {
                 </div>
                 <Divider />
                 <List>
-                  {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem button key={text}>
-                      <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                      <ListItemText primary={text} />
+                  {[{ title: 'Account', icon: AccountBoxIcon }, { title: 'Subjects', icon: ClassIcon }].map(item => (
+                    <ListItem button key={item.title}>
+                      <ListItemIcon><item.icon /></ListItemIcon>
+                      <ListItemText primary={item.title} />
                     </ListItem>
                   ))}
                 </List>
                 <Divider />
                 <List>
-                  {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem button key={text}>
-                      <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                      <ListItemText primary={text} />
-                    </ListItem>
-                  ))}
+                  <ListItem button>
+                    <ListItemIcon><SettingsIcon /></ListItemIcon>
+                    <ListItemText primary="Settings" />
+                  </ListItem>
                 </List>
               </Drawer>
               <main className={classes.content}>
