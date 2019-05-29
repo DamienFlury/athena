@@ -1,36 +1,22 @@
 import React, { useState } from 'react';
 import {
   CssBaseline,
-  Toolbar,
-  AppBar,
-  Typography,
-  Button,
   Box,
   createMuiTheme,
-  IconButton,
-  Divider, ListItem,
-  ListItemText,
-  ListItemIcon,
-  Drawer,
-  List,
 } from '@material-ui/core';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import { blue } from '@material-ui/core/colors';
 import { MuiThemeProvider, makeStyles } from '@material-ui/core/styles';
-import clsx from 'clsx';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import ClassIcon from '@material-ui/icons/Class';
-import SettingsIcon from '@material-ui/icons/Settings';
+
 import ExamsContext from './ExamsContext';
 import CreateExamDialog from './components/CreateExamDialog';
 import Home from './components/Home';
 import useExams from './hooks/useExams';
 import useSubjects from './hooks/useSubjects';
+import NavBar from './components/NavBar';
+import MyDrawer from './components/MyDrawer';
 
 const routes = [
   {
@@ -133,65 +119,13 @@ const App = () => {
           <Router>
             <div className={classes.root}>
               <CssBaseline />
-              <AppBar
-                position="fixed"
-                className={clsx(classes.appBar, {
-                  [classes.appBarShift]: drawerOpen,
-                })}
-              >
-                <Toolbar>
-                  <IconButton
-                    color="inherit"
-                    aria-label="Open drawer"
-                    onClick={() => setDrawerOpen(true)}
-                    edge="start"
-                    className={clsx(classes.menuButton, {
-                      [classes.hide]: drawerOpen,
-                    })}
-                  >
-                    <MenuIcon />
-                  </IconButton>
-                  <Typography variant="h6">Athena</Typography>
-                  <Box flex="1" />
-                  <Button onClick={() => setDialogOpen(true)} color="inherit">New Exam</Button>
-                </Toolbar>
-              </AppBar>
-              <Drawer
-                variant="permanent"
-                className={clsx(classes.drawer, {
-                  [classes.drawerOpen]: drawerOpen,
-                  [classes.drawerClose]: !drawerOpen,
-                })}
-                classes={{
-                  paper: clsx({
-                    [classes.drawerOpen]: drawerOpen,
-                    [classes.drawerClose]: !drawerOpen,
-                  }),
-                }}
-                open={drawerOpen}
-              >
-                <div className={classes.toolbar}>
-                  <IconButton onClick={() => setDrawerOpen(false)}>
-                    {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-                  </IconButton>
-                </div>
-                <Divider />
-                <List>
-                  {[{ title: 'Account', icon: AccountBoxIcon }, { title: 'Subjects', icon: ClassIcon }].map(item => (
-                    <ListItem button key={item.title}>
-                      <ListItemIcon><item.icon /></ListItemIcon>
-                      <ListItemText primary={item.title} />
-                    </ListItem>
-                  ))}
-                </List>
-                <Divider />
-                <List>
-                  <ListItem button>
-                    <ListItemIcon><SettingsIcon /></ListItemIcon>
-                    <ListItemText primary="Settings" />
-                  </ListItem>
-                </List>
-              </Drawer>
+              <NavBar
+                drawerOpen={drawerOpen}
+                setDrawerOpen={setDrawerOpen}
+                setDialogOpen={setDialogOpen}
+                classes={classes}
+              />
+              <MyDrawer drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} classes={classes} />
               <main className={classes.content}>
                 <div className={classes.toolbar} />
                 <Box padding="0 20px">
