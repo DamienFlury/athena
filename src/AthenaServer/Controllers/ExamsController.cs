@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AthenaServer.Data;
 using AthenaServer.Data.Entities;
+using AthenaServer.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,14 +18,20 @@ namespace AthenaServer.Controllers {
 
     [HttpPost]
     public async Task<IActionResult> Add(Exam exam) {
+      var dbExam = new Exam {
+        Title = exam.Title,
+        Date = exam.Date,
+        SubjectId = exam.SubjectId,
+      };
+
       if(!ModelState.IsValid) return BadRequest();
-      _context.Exams.Add(exam);
+      _context.Exams.Add(dbExam);
       await _context.SaveChangesAsync();
-      exam.Subject = await _context.Subjects.SingleOrDefaultAsync(subj => subj.Id == exam.SubjectId);
-      if(exam.Subject is null) {
+      dbExam.Subject = await _context.Subjects.SingleOrDefaultAsync(subj => subj.Id == exam.SubjectId);
+      if(dbExam.Subject is null) {
         return BadRequest();
       }
-      return Ok(exam);
+      return Ok(dbExam);
     }
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState } from 'react';
 import {
   CssBaseline,
   Toolbar,
@@ -17,7 +17,6 @@ import {
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
-import moment from 'moment';
 import { blue } from '@material-ui/core/colors';
 import { MuiThemeProvider, makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
@@ -27,10 +26,11 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import ClassIcon from '@material-ui/icons/Class';
 import SettingsIcon from '@material-ui/icons/Settings';
-import Axios from 'axios';
 import ExamsContext from './ExamsContext';
 import CreateExamDialog from './components/CreateExamDialog';
 import Home from './components/Home';
+import useExams from './hooks/useExams';
+import useSubjects from './hooks/useSubjects';
 
 const routes = [
   {
@@ -114,50 +114,19 @@ const App = () => {
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const [exams, dispatchExams] = useReducer((state, action) => {
-    switch (action.type) {
-      case 'ADD':
-        return [...state, action.exam];
-      case 'REMOVE':
-        return state.filter(ex => ex.id !== action.id);
-      case 'REPLACE':
-        return action.exams;
-      default:
-        return state;
-    }
-  }, []);
-
-  const [subjects, dispatchSubjects] = useReducer((state, action) => {
-    switch (action.type) {
-      case 'ADD':
-        return [...state, action.subject];
-      case 'REPLACE':
-        return action.subjects;
-      default:
-        return state;
-    }
-  }, []);
+  const { exams, addExam } = useExams();
+  const [subjects, dispatchSubjects] = useSubjects();
 
 
   const handleSave = (exam) => {
-    Axios.post('https://localhost:5001/api/exams', exam)
-      .then((res) => {
-        dispatchExams({ type: 'ADD', exam: { ...res.data, date: moment(res.data.date) } });
-      });
+    addExam(exam);
     setDialogOpen(false);
   };
-
-  useEffect(() => {
-    Axios.get('https://localhost:5001/api/exams')
-      .then(res => dispatchExams({ type: 'REPLACE', exams: res.data.map(exam => ({ ...exam, date: moment(exam.date) })) }));
-    Axios.get('https://localhost:5001/api/subjects')
-      .then(res => dispatchSubjects({ type: 'REPLACE', subjects: res.data }));
-  }, []);
 
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
       <ExamsContext.Provider value={{
-        exams, dispatchExams, subjects, dispatchSubjects,
+        exams, subjects, dispatchSubjects,
       }}
       >
         <MuiThemeProvider theme={theme}>
