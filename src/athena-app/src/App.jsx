@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import {
   CssBaseline,
   Toolbar,
@@ -113,45 +113,50 @@ const App = () => {
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const [exams, setExams] = useState([
-    {
-      id: 1, title: 'Grammaire', subject: { title: 'french', color: '#88ff22' }, date: moment(),
-    },
-    {
-      id: 2, title: 'Polynomial equations', subject: { title: 'mathematics', color: '#ff3322' }, date: moment(),
-    },
-    {
-      id: 3, title: 'Grammar', subject: { title: 'english', color: '#8833ff' }, date: moment(),
-    },
-  ]);
+  const [exams, dispatchExams] = useReducer((state, action) => {
+    switch (action.type) {
+      case 'ADD':
+        return [...state, action.exam];
+      case 'REMOVE':
+        return state.filter(ex => ex.id !== action.id);
+      case 'REPLACE':
+        return action.exams;
+      default:
+        return state;
+    }
+  }, []);
 
-  const [subjects, setSubjects] = useState([
-    { id: 1, title: 'mathematics', color: '#ff3322' },
-    { id: 2, title: 'french', color: '#88ff22' },
-    { id: 3, title: 'english', color: '#8833ff' },
-  ]);
+  const [subjects, dispatchSubjects] = useReducer((state, action) => {
+    switch (action.type) {
+      case 'ADD':
+        return [...state, action.subject];
+      case 'replace':
+        return action.subjects;
+      default:
+        return state;
+    }
+  }, []);
 
-  const addExam = newExam => setExams(prev => prev.concat(newExam));
-  const removeExamById = id => setExams(prev => prev.filter(item => item.id !== id));
-
-  const addSubject = newSubject => setSubjects(prev => prev.concat(newSubject));
 
   const handleSave = (exam) => {
     Axios.post('https://localhost:5001/api/exams', exam)
       .then((res) => {
-        addExam({ ...res.data, date: moment(res.data.date) });
+        dispatchExams({ type: 'ADD', exam: { ...res.data, date: moment(res.data.date) } });
       });
     setDialogOpen(false);
   };
 
   useEffect(() => {
-    fetch('https://localhost:5001/api/exams').then(res => res.json()).then(data => setExams(data.map(exam => ({ ...exam, date: moment(exam.date) })))).catch(e => console.log('ERRROORORORO', e));
+    Axios.get('https://localhost:5001/api/exams')
+      .then(res => dispatchExams({ type: 'REPLACE', exams: res.data.map(exam => ({ ...exam, date: moment(exam.date) })) }));
+    Axios.get('https://localhost:5001/api/exams')
+      .then(res => dispatchSubjects({ type: 'REPLACE', subjects: res.data }));
   }, []);
 
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
       <ExamsContext.Provider value={{
-        exams, addExam, removeExamById, subjects, addSubject,
+        exams, dispatchExams, subjects, dispatchSubjects,
       }}
       >
         <MuiThemeProvider theme={theme}>
