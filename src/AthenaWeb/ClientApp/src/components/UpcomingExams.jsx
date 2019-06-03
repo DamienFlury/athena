@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import {
-  Typography, List, Paper, ListItem, Box, makeStyles, Button
+  Typography, List, Paper, ListItem, Box, makeStyles,
 } from '@material-ui/core';
 import ExamsContext from '../ExamsContext';
 

@@ -10,6 +10,7 @@ import {
   FormControl,
   InputLabel,
   Slide,
+  InputAdornment,
 } from '@material-ui/core';
 import { DatePicker } from '@material-ui/pickers';
 import moment from 'moment';
@@ -22,6 +23,7 @@ const CreateExamDialog = (props) => {
   const [title, setTitle] = useState('');
   const { subjects } = useContext(ExamsContext);
   const [subjectId, setSubjectId] = useState(1);
+  const [weighting, setWeighting] = useState(1);
   const [date, setDate] = useState(new Date());
 
 
@@ -50,6 +52,16 @@ const CreateExamDialog = (props) => {
             {subjects.map(subj => <MenuItem key={subj.id} value={subj.id}>{subj.title}</MenuItem>)}
           </Select>
         </FormControl>
+        <TextField
+          label="Weighting"
+          margin="dense"
+          value={weighting * 100}
+          onChange={e => setWeighting(e.target.value / 100)}
+          InputProps={{
+            endAdornment: <InputAdornment position="end">%</InputAdornment>,
+          }}
+          fullWidth
+        />
         <DatePicker
           disableToolbar
           label="Date"
@@ -70,7 +82,9 @@ const CreateExamDialog = (props) => {
 Cancel
         </Button>
         <Button onClick={() => {
-          props.onSubmit({ title, date, subjectId });
+          props.onSubmit({
+            title, date, weighting, subjectId,
+          });
           setTitle('');
           setDate(moment());
           setSubjectId(1);

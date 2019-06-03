@@ -18,20 +18,16 @@ namespace AthenaWeb.Controllers {
 
     [HttpPost]
     public async Task<IActionResult> Add(Exam exam) {
-      var dbExam = new Exam {
-        Title = exam.Title,
-        Date = exam.Date,
-        SubjectId = exam.SubjectId,
-      };
+
 
       if(!ModelState.IsValid) return BadRequest();
-      _context.Exams.Add(dbExam);
+      _context.Exams.Add(exam);
       await _context.SaveChangesAsync();
-      dbExam.Subject = await _context.Subjects.SingleOrDefaultAsync(subj => subj.Id == exam.SubjectId);
-      if(dbExam.Subject is null) {
+      exam.Subject = await _context.Subjects.SingleOrDefaultAsync(subj => subj.Id == exam.SubjectId);
+      if(exam.Subject is null) {
         return BadRequest();
       }
-      return Ok(dbExam);
+      return Ok(exam);
     }
 
     [HttpDelete("{id}")]

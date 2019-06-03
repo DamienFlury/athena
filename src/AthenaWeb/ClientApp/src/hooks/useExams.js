@@ -20,21 +20,21 @@ const useExams = () => {
       .then(res => dispatchExams({ type: 'REPLACE', exams: res.data.map(exam => ({ ...exam, date: moment(exam.date) })) }));
   }, []);
 
-  const addExam = (exam) => {
+  const createExam = (exam) => {
     Axios.post('api/exams', exam)
       .then((res) => {
         dispatchExams({ type: 'ADD', exam: { ...res.data, date: moment(res.data.date) } });
       });
   };
 
-  const deleteExamById = id => {
+  const deleteExamById = (id) => {
     Axios.delete(`api/exams/${id}`)
-      .then(res => {
+      .then(() => {
         dispatchExams({ type: 'REMOVE', id });
       });
   };
 
-  return { exams, addExam, deleteExamById };
+  return { exams, createExam, deleteExamById };
 };
 
 export default useExams;
