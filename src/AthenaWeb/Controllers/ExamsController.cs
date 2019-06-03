@@ -33,5 +33,12 @@ namespace AthenaWeb.Controllers {
       }
       return Ok(dbExam);
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id) {
+      _context.Exams.Remove(await _context.Exams.FindAsync(id));
+      await _context.SaveChangesAsync();
+      return Ok();
+    }
   }
 }

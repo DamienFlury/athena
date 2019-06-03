@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import {
-  Typography, List, Paper, ListItem, Box, makeStyles,
+  Typography, List, Paper, ListItem, Box, makeStyles, Button
 } from '@material-ui/core';
 import ExamsContext from '../ExamsContext';
 
@@ -46,7 +46,6 @@ const UpcomingExams = () => {
                       lastWeek: '[Last] dddd',
                       sameElse: 'DD/MM/YYYY',
                     })}
-
                   </span>
                 </Box>
               </ListItem>

@@ -100,7 +100,7 @@ const App = () => {
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const { exams, addExam } = useExams();
+  const { exams, addExam, deleteExamById } = useExams();
   const { subjects } = useSubjects();
 
 
@@ -112,7 +112,7 @@ const App = () => {
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
       <ExamsContext.Provider value={{
-        exams, subjects,
+        exams, subjects, deleteExamById
       }}
       >
         <MuiThemeProvider theme={theme}>

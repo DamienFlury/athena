@@ -4,7 +4,6 @@ import UpcomingExams from './UpcomingExams';
 
 const Home = () => (
   <div>
-    Hey
     <UpcomingExams />
   </div>
 );

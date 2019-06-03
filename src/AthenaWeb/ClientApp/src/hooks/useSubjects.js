@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react';
-import httpClient from '../httpClient';
+import Axios from 'axios';
 
 const useSubjects = () => {
   const [subjects, dispatch] = useReducer((state, action) => {
@@ -13,7 +13,7 @@ const useSubjects = () => {
     }
   }, []);
   useEffect(() => {
-    httpClient.get('subjects')
+    Axios.get('api/subjects')
       .then(res => dispatch({ type: 'REPLACE', subjects: res.data }));
   }, []);
 
