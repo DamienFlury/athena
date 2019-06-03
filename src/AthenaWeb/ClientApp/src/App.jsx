@@ -17,10 +17,14 @@ import useExams from './hooks/useExams';
 import useSubjects from './hooks/useSubjects';
 import NavBar from './components/NavBar';
 import MyDrawer from './components/MyDrawer';
+import Exams from './components/Exams';
 
 const routes = [
   {
     path: '/', title: 'Home', component: Home, exact: true,
+  },
+  {
+    path: '/exams', title: 'Exams', component: Exams,
   },
 ];
 

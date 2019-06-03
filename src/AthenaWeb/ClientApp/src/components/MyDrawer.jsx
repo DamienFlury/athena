@@ -4,11 +4,12 @@ import {
 } from '@material-ui/core';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 import ClassIcon from '@material-ui/icons/Class';
 import SettingsIcon from '@material-ui/icons/Settings';
 import clsx from 'clsx';
 import { useTheme } from '@material-ui/styles';
+import { Link } from 'react-router-dom';
 
 const MyDrawer = ({ drawerOpen, classes, setDrawerOpen }) => {
   const theme = useTheme();
@@ -35,12 +36,14 @@ const MyDrawer = ({ drawerOpen, classes, setDrawerOpen }) => {
       </div>
       <Divider />
       <List>
-        {[{ title: 'Account', icon: AccountBoxIcon }, { title: 'Subjects', icon: ClassIcon }].map(item => (
-          <ListItem button key={item.title}>
-            <ListItemIcon><item.icon /></ListItemIcon>
-            <ListItemText primary={item.title} />
-          </ListItem>
-        ))}
+        <ListItem button component={Link} to="exams">
+          <ListItemIcon><AssignmentIcon /></ListItemIcon>
+          <ListItemText primary="Exams" />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon><ClassIcon /></ListItemIcon>
+          <ListItemText primary="Subjects" />
+        </ListItem>
       </List>
       <Divider />
       <List>

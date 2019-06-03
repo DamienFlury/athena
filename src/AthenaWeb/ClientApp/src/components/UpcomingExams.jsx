@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import {
   Typography, List, Paper, ListItem, Box, makeStyles,
 } from '@material-ui/core';
+import moment from 'moment';
 import ExamsContext from '../ExamsContext';
 
 
@@ -19,16 +20,17 @@ const useStyles = makeStyles(() => ({
 
 const UpcomingExams = () => {
   const { exams } = useContext(ExamsContext);
+  const upcomingExams = exams.filter(exam => exam.date > moment(new Date()).startOf('day'));
   const classes = useStyles();
   return (
     <div>
       <Box margin="20px 0">
         <Typography variant="h2">Upcoming Exams</Typography>
       </Box>
-      {exams.length > 0 ? (
+      {upcomingExams.length > 0 ? (
         <Paper>
           <List>
-            {exams.slice().sort((a, b) => a.date - b.date).map(exam => (
+            {upcomingExams.slice().sort((a, b) => a.date - b.date).map(exam => (
               <ListItem key={exam.id} className={classes.listItem}>
                 <Box display="flex" width="100%">
                   <div
