@@ -1,12 +1,14 @@
 using System;
 using AthenaWeb.Data.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace AthenaWeb.Data {
-  public class ExamContext : DbContext {
+  public class ExamContext : IdentityDbContext<ApplicationUser> {
     public ExamContext (DbContextOptions<ExamContext> options) : base (options) { }
 
     protected override void OnModelCreating (ModelBuilder modelBuilder) {
+      base.OnModelCreating(modelBuilder);
       modelBuilder.Entity<Subject> ().HasData (new Subject[] {
         new Subject {
           Id = 1,

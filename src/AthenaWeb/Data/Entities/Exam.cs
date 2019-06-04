@@ -12,5 +12,6 @@ namespace AthenaWeb.Data.Entities {
     public DateTime Date { get; set; }
     public int SubjectId { get; set; }
     public Subject Subject { get; set; }
+    public ApplicationUser User { get; set; }
   }
 }

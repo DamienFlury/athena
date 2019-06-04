@@ -1,7 +1,9 @@
 using AthenaWeb.Data;
+using AthenaWeb.Data.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +23,9 @@ namespace AthenaWeb {
             services.AddEntityFrameworkNpgsql ()
                 .AddDbContext<ExamContext> (options => options.UseNpgsql (Configuration.GetConnectionString ("postgres")))
                 .BuildServiceProvider ();
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => {
+                options.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<ExamContext>();
 
             services.AddMvc ().SetCompatibilityVersion (CompatibilityVersion.Version_2_2);
 
@@ -43,6 +48,8 @@ namespace AthenaWeb {
             app.UseHttpsRedirection ();
             app.UseStaticFiles ();
             app.UseSpaStaticFiles ();
+
+            app.UseAuthentication();
 
             app.UseMvc (routes => {
                 routes.MapRoute (
