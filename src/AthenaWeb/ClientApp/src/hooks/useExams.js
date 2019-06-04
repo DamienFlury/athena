@@ -17,20 +17,22 @@ const useExams = () => {
     }
   }, []);
   const { authState } = useContext(AuthContext);
+
+  const authHeader = { headers: { Authorization: `Bearer ${authState.token}` } };
   useEffect(() => {
-    Axios.get('api/exams', { headers: { Authorization: `Bearer ${authState.token}` } })
+    Axios.get('api/exams', authHeader)
       .then(res => dispatchExams({ type: 'REPLACE', exams: res.data.map(exam => ({ ...exam, date: moment(exam.date) })) }));
   }, []);
 
   const createExam = (exam) => {
-    Axios.post('api/exams', exam, { headers: { Authorization: `Bearer ${authState.token}` } })
+    Axios.post('api/exams', exam, authHeader)
       .then((res) => {
         dispatchExams({ type: 'ADD', exam: { ...res.data, date: moment(res.data.date) } });
       });
   };
 
   const deleteExamById = (id) => {
-    Axios.delete(`api/exams/${id}`)
+    Axios.delete(`api/exams/${id}`, authHeader)
       .then(() => {
         dispatchExams({ type: 'REMOVE', id });
       });

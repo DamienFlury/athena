@@ -40,8 +40,9 @@ namespace AthenaWeb.Controllers {
     [HttpDelete ("{id}")]
     [Authorize]
     public async Task<IActionResult> Delete (int id) {
-      var exam = await _context.Exams.FindAsync (id);
-      if(exam.User.UserName != User.Identity.Name) return Unauthorized();
+      var exam = await _context.Exams.Include(ex => ex.User).SingleOrDefaultAsync(ex => ex.Id == id);
+      if(exam is null) return BadRequest("This exam doesn't exist");
+      if(exam.User.UserName != User.Identity.Name) return Unauthorized("You don't have access to this exam");
       _context.Exams.Remove (exam);
       await _context.SaveChangesAsync ();
       return Ok ();

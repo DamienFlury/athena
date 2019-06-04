@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles, Box } from '@material-ui/core';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { useSpring, animated } from 'react-spring';
 import Home from './MainApp/Home';
 import Exams from './MainApp/Exams';
 import ExamsContext from '../contexts/ExamsContext';
@@ -97,13 +98,20 @@ const MainApp = () => {
     setDialogOpen(false);
   };
 
+  const props = useSpring({
+    opacity: 1,
+    from: {
+      opacity: 0,
+    },
+  });
+
   return (
     <ExamsContext.Provider value={{
       exams, subjects, deleteExamById,
     }}
     >
       <Router>
-        <div className={classes.root}>
+        <animated.div className={classes.root} style={props}>
           <NavBar
             drawerOpen={drawerOpen}
             setDrawerOpen={setDrawerOpen}
@@ -131,7 +139,7 @@ const MainApp = () => {
             onSubmit={handleSave}
             onCancel={() => setDialogOpen(false)}
           />
-        </div>
+        </animated.div>
       </Router>
     </ExamsContext.Provider>
   );
