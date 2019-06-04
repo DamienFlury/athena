@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useReducer, useEffect } from 'react';
 import Axios from 'axios';
 
 const useLogin = () => {
@@ -13,11 +13,18 @@ const useLogin = () => {
     }
   }, { loggedIn: false, token: '' });
 
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      dispatch({ type: 'LOGIN', token: localStorage.getItem('token') });
+    }
+  }, []);
+
 
   const login = (creds) => {
     Axios.post('api/auth', creds)
       .then((res) => {
         dispatch({ type: 'LOGIN', token: res.token });
+        localStorage.setItem('token', res.token);
       });
   };
 
