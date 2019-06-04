@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   makeStyles, Typography, TextField, Button,
 } from '@material-ui/core';
 import { useSpring, animated } from 'react-spring';
+import AuthContext from '../contexts/AuthContext';
 
 const useStyles = makeStyles(theme => ({
   wrapper: {
@@ -19,16 +20,17 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Login = ({ onLogin }) => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { login } = useContext(AuthContext);
   const props = useSpring({
     maxWidth: '840px', padding: '20px 20px', opacity: 1, from: { maxWidth: '0px', padding: '20px 0px', opacity: 0 }, config: { tension: 400, mass: 1 },
   });
   const classes = useStyles();
   const handleSubmit = (e) => {
     e.preventDefault();
-    onLogin({ email, password });
+    login({ email, password });
   };
   return (
     <animated.div className={classes.wrapper} style={props}>

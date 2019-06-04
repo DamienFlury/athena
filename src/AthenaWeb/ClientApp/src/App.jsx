@@ -10,7 +10,8 @@ import MomentUtils from '@date-io/moment';
 import { blue } from '@material-ui/core/colors';
 import { MuiThemeProvider, makeStyles } from '@material-ui/core/styles';
 
-import ExamsContext from './ExamsContext';
+import ExamsContext from './contexts/ExamsContext';
+import AuthContext from './contexts/AuthContext';
 import CreateExamDialog from './components/CreateExamDialog';
 import Home from './components/Home';
 import useExams from './hooks/useExams';
@@ -119,45 +120,51 @@ const App = () => {
 
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
-      <ExamsContext.Provider value={{
-        exams, subjects, deleteExamById,
-      }}
-      >
-        <MuiThemeProvider theme={theme}>
-          <Router>
-            <div className={classes.root}>
-              <CssBaseline />
-              {authState.loggedIn ? (
-                <>
-                  <NavBar
-                    drawerOpen={drawerOpen}
-                    setDrawerOpen={setDrawerOpen}
-                    setDialogOpen={setDialogOpen}
-                    classes={classes}
-                  />
-                  <MyDrawer drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} classes={classes} />
-                  <main className={classes.content}>
-                    <div className={classes.toolbar} />
-                    <Box padding="0 20px">
-                      <Switch>
-                        {routes.map(route => (
-                          <Route key={route.path} {...route} />
-                        ))}
-                      </Switch>
-                    </Box>
-                  </main>
-                  <CreateExamDialog
-                    open={dialogOpen}
-                    onClose={() => setDialogOpen(false)}
-                    onSubmit={handleSave}
-                    onCancel={() => setDialogOpen(false)}
-                  />
-                </>
-              ) : <Login onLogin={login} />}
-            </div>
-          </Router>
-        </MuiThemeProvider>
-      </ExamsContext.Provider>
+      <AuthContext.Provider value={{ authState, login, logout }}>
+        <ExamsContext.Provider value={{
+          exams, subjects, deleteExamById,
+        }}
+        >
+          <MuiThemeProvider theme={theme}>
+            <Router>
+              <div className={classes.root}>
+                <CssBaseline />
+                {authState.loggedIn ? (
+                  <>
+                    <NavBar
+                      drawerOpen={drawerOpen}
+                      setDrawerOpen={setDrawerOpen}
+                      setDialogOpen={setDialogOpen}
+                      classes={classes}
+                    />
+                    <MyDrawer
+                      drawerOpen={drawerOpen}
+                      setDrawerOpen={setDrawerOpen}
+                      classes={classes}
+                    />
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      <Box padding="0 20px">
+                        <Switch>
+                          {routes.map(route => (
+                            <Route key={route.path} {...route} />
+                          ))}
+                        </Switch>
+                      </Box>
+                    </main>
+                    <CreateExamDialog
+                      open={dialogOpen}
+                      onClose={() => setDialogOpen(false)}
+                      onSubmit={handleSave}
+                      onCancel={() => setDialogOpen(false)}
+                    />
+                  </>
+                ) : <Login />}
+              </div>
+            </Router>
+          </MuiThemeProvider>
+        </ExamsContext.Provider>
+      </AuthContext.Provider>
     </MuiPickersUtilsProvider>
   );
 };
