@@ -18,6 +18,8 @@ import useSubjects from './hooks/useSubjects';
 import NavBar from './components/NavBar';
 import MyDrawer from './components/MyDrawer';
 import Exams from './components/Exams';
+import Login from './components/Login';
+import useLogin from './hooks/useLogin';
 
 const routes = [
   {
@@ -107,6 +109,8 @@ const App = () => {
   const { exams, createExam, deleteExamById } = useExams();
   const { subjects } = useSubjects();
 
+  const { authState, login, logout } = useLogin();
+
 
   const handleSave = (exam) => {
     createExam(exam);
@@ -123,29 +127,33 @@ const App = () => {
           <Router>
             <div className={classes.root}>
               <CssBaseline />
-              <NavBar
-                drawerOpen={drawerOpen}
-                setDrawerOpen={setDrawerOpen}
-                setDialogOpen={setDialogOpen}
-                classes={classes}
-              />
-              <MyDrawer drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} classes={classes} />
-              <main className={classes.content}>
-                <div className={classes.toolbar} />
-                <Box padding="0 20px">
-                  <Switch>
-                    {routes.map(route => (
-                      <Route key={route.path} {...route} />
-                    ))}
-                  </Switch>
-                </Box>
-              </main>
-              <CreateExamDialog
-                open={dialogOpen}
-                onClose={() => setDialogOpen(false)}
-                onSubmit={handleSave}
-                onCancel={() => setDialogOpen(false)}
-              />
+              {authState.loggedIn ? (
+                <>
+                  <NavBar
+                    drawerOpen={drawerOpen}
+                    setDrawerOpen={setDrawerOpen}
+                    setDialogOpen={setDialogOpen}
+                    classes={classes}
+                  />
+                  <MyDrawer drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} classes={classes} />
+                  <main className={classes.content}>
+                    <div className={classes.toolbar} />
+                    <Box padding="0 20px">
+                      <Switch>
+                        {routes.map(route => (
+                          <Route key={route.path} {...route} />
+                        ))}
+                      </Switch>
+                    </Box>
+                  </main>
+                  <CreateExamDialog
+                    open={dialogOpen}
+                    onClose={() => setDialogOpen(false)}
+                    onSubmit={handleSave}
+                    onCancel={() => setDialogOpen(false)}
+                  />
+                </>
+              ) : <Login onLogin={login} />}
             </div>
           </Router>
         </MuiThemeProvider>
