@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import moment from 'moment';
 import { Typography, Box } from '@material-ui/core';
-import ExamsContext from '../contexts/ExamsContext';
+import ExamsContext from '../../contexts/ExamsContext';
 import ExamsList from './ExamsList';
 
 

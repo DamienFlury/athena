@@ -49,7 +49,7 @@ namespace AthenaWeb.Controllers {
 
       var results = new {
         Token = new JwtSecurityTokenHandler ().WriteToken (token),
-        expiration = token.ValidTo
+        expires = token.ValidTo
       };
 
       return Created ("", results);

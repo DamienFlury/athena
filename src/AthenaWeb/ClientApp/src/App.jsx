@@ -1,35 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   CssBaseline,
-  Box,
   createMuiTheme,
 } from '@material-ui/core';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import { blue } from '@material-ui/core/colors';
-import { MuiThemeProvider, makeStyles } from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 
-import ExamsContext from './contexts/ExamsContext';
 import AuthContext from './contexts/AuthContext';
-import CreateExamDialog from './components/CreateExamDialog';
-import Home from './components/Home';
-import useExams from './hooks/useExams';
-import useSubjects from './hooks/useSubjects';
-import NavBar from './components/NavBar';
-import MyDrawer from './components/MyDrawer';
-import Exams from './components/Exams';
-import Login from './components/Login';
-import useLogin from './hooks/useLogin';
 
-const routes = [
-  {
-    path: '/', title: 'Home', component: Home, exact: true,
-  },
-  {
-    path: '/exams', title: 'Exams', component: Exams,
-  },
-];
+import useLogin from './hooks/useLogin';
+import MainApp from './components/MainApp';
+import Login from './components/Login';
+
 
 const theme = createMuiTheme({
   palette: {
@@ -37,133 +21,17 @@ const theme = createMuiTheme({
   },
 });
 
-const drawerWidth = 240;
-
-const useStyles = makeStyles(() => ({
-  root: {
-    display: 'flex',
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  menuButton: {
-    marginRight: 36,
-  },
-  hide: {
-    display: 'none',
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-  },
-  drawerOpen: {
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerClose: {
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    overflowX: 'hidden',
-    width: theme.spacing(7) + 1,
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9) + 1,
-    },
-  },
-  toolbar: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: '0 8px',
-    ...theme.mixins.toolbar,
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
-}));
-
 
 const App = () => {
-  const classes = useStyles();
-  const [drawerOpen, setDrawerOpen] = useState(false);
-
-  const [dialogOpen, setDialogOpen] = useState(false);
-
-  const { exams, createExam, deleteExamById } = useExams();
-  const { subjects } = useSubjects();
-
   const { authState, login, logout } = useLogin();
-
-
-  const handleSave = (exam) => {
-    createExam(exam);
-    setDialogOpen(false);
-  };
 
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
       <AuthContext.Provider value={{ authState, login, logout }}>
-        <ExamsContext.Provider value={{
-          exams, subjects, deleteExamById,
-        }}
-        >
-          <MuiThemeProvider theme={theme}>
-            <Router>
-              <div className={classes.root}>
-                <CssBaseline />
-                {authState.loggedIn ? (
-                  <>
-                    <NavBar
-                      drawerOpen={drawerOpen}
-                      setDrawerOpen={setDrawerOpen}
-                      setDialogOpen={setDialogOpen}
-                      classes={classes}
-                    />
-                    <MyDrawer
-                      drawerOpen={drawerOpen}
-                      setDrawerOpen={setDrawerOpen}
-                      classes={classes}
-                    />
-                    <main className={classes.content}>
-                      <div className={classes.toolbar} />
-                      <Box padding="0 20px">
-                        <Switch>
-                          {routes.map(route => (
-                            <Route key={route.path} {...route} />
-                          ))}
-                        </Switch>
-                      </Box>
-                    </main>
-                    <CreateExamDialog
-                      open={dialogOpen}
-                      onClose={() => setDialogOpen(false)}
-                      onSubmit={handleSave}
-                      onCancel={() => setDialogOpen(false)}
-                    />
-                  </>
-                ) : <Login />}
-              </div>
-            </Router>
-          </MuiThemeProvider>
-        </ExamsContext.Provider>
+        <MuiThemeProvider theme={theme}>
+          <CssBaseline />
+          {authState.loggedIn ? <MainApp /> : <Login />}
+        </MuiThemeProvider>
       </AuthContext.Provider>
     </MuiPickersUtilsProvider>
   );

@@ -1,5 +1,6 @@
 import { useReducer, useEffect } from 'react';
 import Axios from 'axios';
+import moment from 'moment';
 
 const useLogin = () => {
   const [authState, dispatch] = useReducer((state, action) => {
@@ -14,8 +15,9 @@ const useLogin = () => {
   }, { loggedIn: false, token: '' });
 
   useEffect(() => {
-    if (localStorage.getItem('token')) {
-      dispatch({ type: 'LOGIN', token: localStorage.getItem('token') });
+    const token = JSON.parse(localStorage.getItem('token'));
+    if (token && moment(token.expires) > moment.utc()) {
+      dispatch({ type: 'LOGIN', token: token.token });
     }
   }, []);
 
@@ -23,8 +25,8 @@ const useLogin = () => {
   const login = (creds) => {
     Axios.post('api/auth', creds)
       .then((res) => {
-        dispatch({ type: 'LOGIN', token: res.token });
-        localStorage.setItem('token', res.token);
+        dispatch({ type: 'LOGIN', token: res.data.token });
+        localStorage.setItem('token', JSON.stringify({ token: res.data.token, expires: res.data.expires }));
       });
   };
 

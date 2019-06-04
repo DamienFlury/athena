@@ -13,7 +13,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DoneIcon from '@material-ui/icons/Done';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import ExamsContext from '../contexts/ExamsContext';
+import ExamsContext from '../../contexts/ExamsContext';
 
 const useStyles = makeStyles(theme => ({
   colorIndicator: {

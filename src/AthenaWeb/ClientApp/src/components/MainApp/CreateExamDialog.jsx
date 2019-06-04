@@ -14,7 +14,7 @@ import {
 } from '@material-ui/core';
 import { DatePicker } from '@material-ui/pickers';
 import moment from 'moment';
-import ExamsContext from '../contexts/ExamsContext';
+import ExamsContext from '../../contexts/ExamsContext';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
