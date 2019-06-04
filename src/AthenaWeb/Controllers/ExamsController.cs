@@ -38,8 +38,11 @@ namespace AthenaWeb.Controllers {
     }
 
     [HttpDelete ("{id}")]
+    [Authorize]
     public async Task<IActionResult> Delete (int id) {
-      _context.Exams.Remove (await _context.Exams.FindAsync (id));
+      var exam = await _context.Exams.FindAsync (id);
+      if(exam.User.UserName != User.Identity.Name) return Unauthorized();
+      _context.Exams.Remove (exam);
       await _context.SaveChangesAsync ();
       return Ok ();
     }
